@@ -1,0 +1,18 @@
+@{ Layout = "_Layout"; }
+
+@using PiratesDataBases.Models;
+@model List<PiratesDataBases.Models.Ship>;
+
+<h2>Ships</h2>
+
+@foreach (Ship ship in Model)
+{
+    <li>@ship.ShipType</li>
+    <li>- - - - tris: @ship.TriCannons</li>
+    <li>- - - - squas:  @ship.SquareCannons</li>
+    <li>- - - -  hp: @ship.Hp</li>
+    <li>- - - -  cost: @ship.Cost</li>
+
+    <br>
+    <br>
+}

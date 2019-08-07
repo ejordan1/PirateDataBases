@@ -1,0 +1,24 @@
+@{ Layout = "_Layout"; }
+
+@using PiratesDataBases.Models;
+@model PiratesDataBases.Models.Ship;
+
+@using (Html.BeginForm())
+{
+    @Html.LabelFor(model => model.ShipType)
+    @Html.TextBoxFor(model => model.ShipType)
+
+    @Html.LabelFor(model => model.TriCannons)
+    @Html.TextBoxFor(model => model.TriCannons)
+
+    @Html.LabelFor(model => model.SquareCannons)
+    @Html.TextBoxFor(model => model.SquareCannons)
+
+    @Html.LabelFor(model => model.Cost)
+    @Html.TextBoxFor(model => model.Cost)
+
+    @Html.LabelFor(model => model.Hp)
+    @Html.TextBoxFor(model => model.Hp)
+    <input type="submit" value = "Create Ship" class="btn btn-default" />
+}
+<p>@Html.ActionLink("Ultimately, I'd prefer to not build a ship.", "Index")</p>
