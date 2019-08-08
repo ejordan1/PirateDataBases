@@ -16,10 +16,10 @@
         var cerealShips = @Json.Serialize(@ViewBag.ships);
         console.log(cerealShipPieces);
          console.log(cerealShips);
-</script>
+        </script>
 		<script>
-
-
+            var gameShips = [];
+            var shipsDisplaying = [];
             let shipPieces = '@ViewBag.shipPieces' 
 			var scene = new THREE.Scene();
 			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
@@ -34,51 +34,87 @@
                console.log("FOREACH IS WORKINGS");
                spawnShip(shipPiece)
                });
-     
-			
+            console.log(gameShips);
+			displayShips();
 
-			camera.position.z = 10;
+			camera.position.z = 20;
 
 			var animate = function () {
 			requestAnimationFrame( animate );
 
-				
+			displayShips();
 
 				renderer.render( scene, camera );
+                makeShipGo();
 			};
 
 			animate();
 
             function spawnShip(shipPiece){
-            let thisShip = getShip(shipPiece.shipType);
-            var geometry = new THREE.BoxGeometry( thisShip.hp / 1000, .2, .2 );
-            if (shipPiece.team == 1){
-                var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-            } else if (shipPiece.team == 2){
-                var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );  
-            } else {
-                var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );  
+            let shipTemplate = getShip(shipPiece.shipType);
+            let thisShip = {
+                team : shipTemplate.team,
+                hp : shipTemplate.hp,
+                triCannons : shipTemplate.triCannons,
+                squareCannons : shipTemplate.squareCannons
             }
-			
-            var cube = new THREE.Mesh( geometry, material );
-            cube.position.x = shipPiece.xPos;
-            cube.position.y = shipPiece.yPos;
-            
-            
-			cube.rotation.x += 0.01;
-				cube.rotation.y += 0.01;
-			scene.add( cube );
+            thisShip.xPos = shipPiece.xPos;
+            thisShip.yPos = shipPiece.yPos;
+            thisShip.team = shipPiece.team;
+			gameShips.push(thisShip);
             }
 
             function getShip(shipType){
                 console.log(cerealShips.length)
                 for(let i = 0; i < cerealShips.length; i++){
                     console.log(cerealShips[i].shipType)
-                    if (cerealShips[i].shipType == shipType){
+                    if (cerealShips[i].shipType.toLowerCase() == shipType.toLowerCase()){
                         return cerealShips[i];
                     }
                 }
-                throw "No ships of that name!";
+                throw shipType + " : not found";
+            }
+
+            function displayShips(){
+                shipsDisplaying.forEach(function(shipRendering){
+                    scene.remove(shipRendering);
+                })
+                shipsDisplaying = [];
+                gameShips.forEach(function(ship){
+                    //console.log(ship);
+                    var geometry = new THREE.BoxGeometry( ship.hp / 100, .2, .2 );
+                if (ship.team == 1){
+                    var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+                } else if (ship.team == 2){
+                    var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );  
+                } else {
+                    var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );  
+                }
+                
+                var cube = new THREE.Mesh( geometry, material );
+                //console.log("XPOS OF THIS SHIP: " + ship.xPos);
+                cube.position.x = ship.xPos;
+                //console.log("YPOS OF THIS SHIP: " + ship.yPos);
+                cube.position.y = ship.yPos;
+                
+                
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                shipsDisplaying.push(cube);
+                scene.add( cube );
+                });
+            }
+
+            function makeShipGo(){
+                gameShips.forEach(function(ship){
+                    if (ship.team == 1){
+                        ship.xPos += .01;
+                    } else if (ship.team == 2){
+                        ship.xPos -= .01;
+                    } else {
+                        //team three ships don't move
+                    }
+                })
             }
 		</script>
 	</body>
