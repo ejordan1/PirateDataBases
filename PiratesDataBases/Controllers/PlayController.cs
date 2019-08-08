@@ -17,8 +17,9 @@ namespace PiratesDataBases.Controllers
         public ActionResult Level1()
         {
            
-            ViewBag.shipPieces = _db.ShipPieces.Where(shipPiece => shipPiece.Stage == 1).ToList();
-            ViewBag.ships = _db.Ships.ToList();
+            ViewBag.shipPieces = _db.ShipPieces.Where(shipPiece => shipPiece.Stage == 1).ToArray();
+            ViewBag.ships = _db.Ships.ToArray();
+            
             return View();
         }
 

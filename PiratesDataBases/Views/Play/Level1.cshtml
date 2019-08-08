@@ -7,32 +7,79 @@
 		</style>
 	</head>
 	<body>
-		<script src="js/three.js"></script>
+         @using PiratesDataBases.Models;
+		<script src="~/js/three.js"></script>
+        <script type="text/javascript">
+
+        @inject IJsonHelper Json;
+        var cerealShipPieces = @Json.Serialize(@ViewBag.shipPieces);
+        var cerealShips = @Json.Serialize(@ViewBag.ships);
+        console.log(cerealShipPieces);
+         console.log(cerealShips);
+</script>
 		<script>
+
+
+            let shipPieces = '@ViewBag.shipPieces' 
 			var scene = new THREE.Scene();
 			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
 			var renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
+            
+            console.log(shipPieces.toString());
+           
+           cerealShipPieces.forEach(function(shipPiece){
+               console.log("FOREACH IS WORKINGS");
+               spawnShip(shipPiece)
+               });
+     
+			
 
-			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-			var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-			var cube = new THREE.Mesh( geometry, material );
-			scene.add( cube );
-
-			camera.position.z = 5;
+			camera.position.z = 10;
 
 			var animate = function () {
-				requestAnimationFrame( animate );
+			requestAnimationFrame( animate );
 
-				cube.rotation.x += 0.01;
-				cube.rotation.y += 0.01;
+				
 
 				renderer.render( scene, camera );
 			};
 
 			animate();
+
+            function spawnShip(shipPiece){
+            let thisShip = getShip(shipPiece.shipType);
+            var geometry = new THREE.BoxGeometry( thisShip.hp / 1000, .2, .2 );
+            if (shipPiece.team == 1){
+                var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+            } else if (shipPiece.team == 2){
+                var material = new THREE.MeshBasicMaterial( { color: 0xff0000 } );  
+            } else {
+                var material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );  
+            }
+			
+            var cube = new THREE.Mesh( geometry, material );
+            cube.position.x = shipPiece.xPos;
+            cube.position.y = shipPiece.yPos;
+            
+            
+			cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+			scene.add( cube );
+            }
+
+            function getShip(shipType){
+                console.log(cerealShips.length)
+                for(let i = 0; i < cerealShips.length; i++){
+                    console.log(cerealShips[i].shipType)
+                    if (cerealShips[i].shipType == shipType){
+                        return cerealShips[i];
+                    }
+                }
+                throw "No ships of that name!";
+            }
 		</script>
 	</body>
 </html>
