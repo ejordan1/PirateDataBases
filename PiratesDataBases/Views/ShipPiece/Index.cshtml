@@ -1,0 +1,41 @@
+@{Layout = "_Layout";}
+@using PiratesDataBases.Models;
+@model PiratesDataBases.Models.ShipPiece;
+
+@using (Html.BeginForm()){
+
+    @Html.LabelFor(model => model.Stage);
+    @Html.TextBoxFor(model => model.Stage);
+
+    @Html.LabelFor(model => model.Team);
+    @Html.TextBoxFor(model => model.Team);
+
+    @Html.LabelFor(model => model.ShipType);
+    @Html.TextBoxFor(model => model.ShipType);
+
+    @Html.LabelFor(model => model.XPos);
+    @Html.TextBoxFor(model => model.XPos);
+
+    @Html.LabelFor(model => model.YPos);
+    @Html.TextBoxFor(model => model.YPos);
+
+     <input type="submit" value="Add new item" class="btn btn-default" />
+    
+}
+<ol>
+    
+@foreach(ShipPiece shipPiece in ViewBag.shipPieces)
+{   <li>
+    <ul>
+        <li>Stage: @shipPiece.Stage</li>
+        <li>Team: @shipPiece.Team</li>
+        <li>ShipType: @shipPiece.ShipType</li>
+        <li>X: @shipPiece.XPos</li>
+        <li>Y: @shipPiece.YPos</li>
+    </ul>
+    </li>
+    <br>
+    <p>@Html.ActionLink("Delete Ship Piece", "Delete", new { id = @shipPiece.ShipPieceId })</p>
+    <br>
+}
+</ol>
