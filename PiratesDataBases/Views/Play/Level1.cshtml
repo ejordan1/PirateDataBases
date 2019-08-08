@@ -39,6 +39,13 @@
 
 			camera.position.z = 20;
 
+            setInterval(function(){
+                gameShips.forEach(function(ship){
+                    ship.xSpeed = (Math.random() - .5) * .2;
+                    ship.ySpeed = (Math.random() - .5) * .2;
+                })
+            }, 5);
+
 			var animate = function () {
 			requestAnimationFrame( animate );
 
@@ -60,6 +67,8 @@
             }
             thisShip.xPos = shipPiece.xPos;
             thisShip.yPos = shipPiece.yPos;
+            thisShip.xSpeed = 0;
+            thisShip.ySpeed = 0;
             thisShip.team = shipPiece.team;
 			gameShips.push(thisShip);
             }
@@ -107,13 +116,9 @@
 
             function makeShipGo(){
                 gameShips.forEach(function(ship){
-                    if (ship.team == 1){
-                        ship.xPos += .01;
-                    } else if (ship.team == 2){
-                        ship.xPos -= .01;
-                    } else {
-                        //team three ships don't move
-                    }
+                    ship.xPos += ship.xSpeed;
+                    ship.yPos += ship.ySpeed;
+                    
                 })
             }
 		</script>
